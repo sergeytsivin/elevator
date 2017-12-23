@@ -1,4 +1,5 @@
 import asyncio
+from commands import CallCommand, GoCommand
 
 
 class Controller(object):
@@ -6,6 +7,10 @@ class Controller(object):
         self.server_name = server_name
         self.loop = loop
         self.server = loop.run_until_complete(asyncio.start_server(self.accept_connection, "", port, loop=loop))
+        self.command_queue = asyncio.Queue()
+
+    def get_command_queue(self):
+        return self.command_queue
 
     async def get_command(self, reader, writer):
         while True:
@@ -50,6 +55,7 @@ class Controller(object):
         try:
             floor = int(args[0])
             writer.write("Calling elevator to floor {}\n".format(floor).encode())
+            self.command_queue.put_nowait(CallCommand(floor))
         except (ValueError, IndexError):
             writer.write("Error: invalid or missing arguments: {}\n".format(','.join(args)).encode())
 
@@ -57,5 +63,6 @@ class Controller(object):
         try:
             floor = int(args[0])
             writer.write("Cabin button {} is pressed\n".format(floor).encode())
+            self.command_queue.put_nowait(GoCommand(floor))
         except (ValueError, IndexError):
             writer.write("Error: invalid or missing arguments: {}\n".format(','.join(args)).encode())
