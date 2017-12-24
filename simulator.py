@@ -43,10 +43,14 @@ def main():
         height=args.height,
         velocity=args.velocity
     )
+
+    task = loop.create_task(elevator.run())
     try:
-        loop.run_until_complete(elevator.run())
+        loop.run_until_complete(task)
     except KeyboardInterrupt:
-        print("Shutting down...")
+        print("Shutdown requested")
+        task.cancel()
+        loop.run_forever()
     finally:
         loop.close()
 

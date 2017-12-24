@@ -80,5 +80,9 @@ class Elevator:
     async def run(self):
         log("Starting operations")
         destination = None
-        while True:
-            self.current_state, destination = await self.current_state.run(self, destination=destination)
+        try:
+            while True:
+                self.current_state, destination = await self.current_state.run(self, destination=destination)
+        except asyncio.CancelledError:
+            log("Stop operations")
+            asyncio.get_event_loop().stop()
