@@ -10,7 +10,7 @@ class CallCommand(Command):
         self.floor = floor
 
     def handle(self, elevator):
-        elevator.on_call(self.floor)
+        elevator.on_call_button(self.floor)
 
 
 class GoCommand(Command):
