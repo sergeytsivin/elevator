@@ -59,15 +59,15 @@ State.doors_open = DoorsOpen()
 
 
 class Elevator:
-    def __init__(self, command_queue, max_floor=12):
+    def __init__(self, command_queue, floors=12, height=2.65, velocity=3.0):
         self.command_queue = command_queue
-        self.max_floor = max_floor
+        self.floors = floors
         self.current_floor = 1
-        self.time_to_next_floor = 1
+        self.time_to_next_floor = float(height) / velocity
         self.current_state = State.idle
 
     def floor_is_valid(self, floor):
-        return 1 <= floor <= self.max_floor
+        return 1 <= floor <= self.floors
 
     def on_call(self, floor):
         if self.floor_is_valid(floor):
