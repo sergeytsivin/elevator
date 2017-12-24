@@ -80,19 +80,8 @@ class Active(State):
                 await self.moving_down(elevator, destination)
 
 
-class DoorsOpen(State):
-    async def run(self, elevator, *args, **kwargs):
-        log("Opening doors")
-        try:
-            await asyncio.sleep(3)
-        finally:
-            log("Closing doors")
-        return State.idle
-
-
 State.idle = Idle()
 State.active = Active()
-State.doors_open = DoorsOpen()
 
 
 class Elevator(object):
